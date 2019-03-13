@@ -117,6 +117,7 @@ pub enum Expression {
     Boolean(bool),
     Identifier(String),
     IndexedIdentifier(String, usize),
+    VariableIndexed(String, String),
     Binary(BinaryOp, Box<Expression>, Box<Expression>),
     Unary(UnaryOp, Box<Expression>),
     Pi,
@@ -140,7 +141,8 @@ pub enum DurationUnit {
 pub enum QubitRef {
     Single(String),
     Register(String, usize),
-    Hardware(usize), // Direct hardware qubit index e.g. $0, $1
+    Variable(String, String), // e.g. q[i]
+    Hardware(usize),          // Direct hardware qubit index e.g. $0, $1
 }
 
 impl fmt::Display for QubitRef {
@@ -148,6 +150,7 @@ impl fmt::Display for QubitRef {
         match self {
             QubitRef::Single(name) => write!(f, "{}", name),
             QubitRef::Register(name, idx) => write!(f, "{}[{}]", name, idx),
+            QubitRef::Variable(name, var) => write!(f, "{}[{}]", name, var),
             QubitRef::Hardware(idx) => write!(f, "${}", idx),
         }
     }
@@ -158,6 +161,7 @@ impl fmt::Display for QubitRef {
 pub enum ClassicalRef {
     Single(String),
     Register(String, usize),
+    Variable(String, String),
 }
 
 impl fmt::Display for ClassicalRef {
@@ -165,6 +169,7 @@ impl fmt::Display for ClassicalRef {
         match self {
             ClassicalRef::Single(name) => write!(f, "{}", name),
             ClassicalRef::Register(name, idx) => write!(f, "{}[{}]", name, idx),
+            ClassicalRef::Variable(name, var) => write!(f, "{}[{}]", name, var),
         }
     }
 }
@@ -193,6 +198,7 @@ mod tests {
     fn test_qubit_ref_display() {
         assert_eq!(QubitRef::Single("q".into()).to_string(), "q");
         assert_eq!(QubitRef::Register("data".into(), 5).to_string(), "data[5]");
+        assert_eq!(QubitRef::Variable("data".into(), "i".into()).to_string(), "data[i]");
         assert_eq!(QubitRef::Hardware(12).to_string(), "$12");
     }
 
