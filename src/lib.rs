@@ -4,6 +4,7 @@ pub mod gates;
 pub mod lexer;
 pub mod parser;
 pub mod simulator;
+pub mod topology;
 pub mod types;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
