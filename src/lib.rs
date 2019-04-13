@@ -4,6 +4,7 @@ pub mod gates;
 pub mod lexer;
 pub mod parser;
 pub mod passes;
+pub mod rhai_engine;
 pub mod simulator;
 pub mod topology;
 pub mod types;
