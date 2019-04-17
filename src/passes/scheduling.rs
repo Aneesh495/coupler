@@ -3,7 +3,7 @@
 //! Computes total circuit duration in nanoseconds/clock cycles, resource utilization,
 //! and idle duration gaps across all qubits.
 
-use crate::ast::{GateCall, Program, Statement};
+use crate::ast::{Program, Statement};
 use std::collections::HashMap;
 
 /// Circuit latency report detailing total duration and per-qubit depth.

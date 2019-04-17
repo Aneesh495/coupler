@@ -4,7 +4,7 @@
 //! {cx, rz, sx, x} or {cz, rz, sx, x}.
 
 use crate::ast::{GateCall, Program, Statement};
-use crate::types::{Expression, QubitRef};
+use crate::types::Expression;
 use std::f64::consts::PI;
 
 /// Decompose all high-level gates in an OpenQASM program into the native transmon basis.
