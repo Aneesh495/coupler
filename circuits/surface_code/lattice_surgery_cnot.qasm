@@ -1,0 +1,155 @@
+OPENQASM 3.0;
+include "stdgates.inc";
+
+// Fault-Tolerant Logical CNOT via Planar Lattice Surgery
+// Surface code patches: Control patch A (9 qubits), Target patch B (9 qubits), Routing patch M (6 qubits)
+
+qubit[9] patch_control;
+qubit[9] patch_target;
+qubit[6] patch_mediator;
+bit[6] boundary_syn;
+
+// Lattice Surgery Interaction Cycle 1
+reset patch_mediator[0];
+h patch_mediator[0];
+reset patch_mediator[1];
+h patch_mediator[1];
+reset patch_mediator[2];
+h patch_mediator[2];
+reset patch_mediator[3];
+h patch_mediator[3];
+reset patch_mediator[4];
+h patch_mediator[4];
+reset patch_mediator[5];
+h patch_mediator[5];
+barrier patch_control, patch_target, patch_mediator;
+cx patch_control[2], patch_mediator[0];
+cx patch_mediator[0], patch_target[0];
+cx patch_control[5], patch_mediator[1];
+cx patch_mediator[1], patch_target[3];
+cx patch_control[8], patch_mediator[2];
+cx patch_mediator[2], patch_target[6];
+barrier patch_control, patch_target, patch_mediator;
+boundary_syn[0] = measure patch_mediator[0];
+boundary_syn[1] = measure patch_mediator[1];
+boundary_syn[2] = measure patch_mediator[2];
+boundary_syn[3] = measure patch_mediator[3];
+boundary_syn[4] = measure patch_mediator[4];
+boundary_syn[5] = measure patch_mediator[5];
+barrier patch_control, patch_target;
+
+// Lattice Surgery Interaction Cycle 2
+reset patch_mediator[0];
+h patch_mediator[0];
+reset patch_mediator[1];
+h patch_mediator[1];
+reset patch_mediator[2];
+h patch_mediator[2];
+reset patch_mediator[3];
+h patch_mediator[3];
+reset patch_mediator[4];
+h patch_mediator[4];
+reset patch_mediator[5];
+h patch_mediator[5];
+barrier patch_control, patch_target, patch_mediator;
+cx patch_control[2], patch_mediator[0];
+cx patch_mediator[0], patch_target[0];
+cx patch_control[5], patch_mediator[1];
+cx patch_mediator[1], patch_target[3];
+cx patch_control[8], patch_mediator[2];
+cx patch_mediator[2], patch_target[6];
+barrier patch_control, patch_target, patch_mediator;
+boundary_syn[0] = measure patch_mediator[0];
+boundary_syn[1] = measure patch_mediator[1];
+boundary_syn[2] = measure patch_mediator[2];
+boundary_syn[3] = measure patch_mediator[3];
+boundary_syn[4] = measure patch_mediator[4];
+boundary_syn[5] = measure patch_mediator[5];
+barrier patch_control, patch_target;
+
+// Lattice Surgery Interaction Cycle 3
+reset patch_mediator[0];
+h patch_mediator[0];
+reset patch_mediator[1];
+h patch_mediator[1];
+reset patch_mediator[2];
+h patch_mediator[2];
+reset patch_mediator[3];
+h patch_mediator[3];
+reset patch_mediator[4];
+h patch_mediator[4];
+reset patch_mediator[5];
+h patch_mediator[5];
+barrier patch_control, patch_target, patch_mediator;
+cx patch_control[2], patch_mediator[0];
+cx patch_mediator[0], patch_target[0];
+cx patch_control[5], patch_mediator[1];
+cx patch_mediator[1], patch_target[3];
+cx patch_control[8], patch_mediator[2];
+cx patch_mediator[2], patch_target[6];
+barrier patch_control, patch_target, patch_mediator;
+boundary_syn[0] = measure patch_mediator[0];
+boundary_syn[1] = measure patch_mediator[1];
+boundary_syn[2] = measure patch_mediator[2];
+boundary_syn[3] = measure patch_mediator[3];
+boundary_syn[4] = measure patch_mediator[4];
+boundary_syn[5] = measure patch_mediator[5];
+barrier patch_control, patch_target;
+
+// Lattice Surgery Interaction Cycle 4
+reset patch_mediator[0];
+h patch_mediator[0];
+reset patch_mediator[1];
+h patch_mediator[1];
+reset patch_mediator[2];
+h patch_mediator[2];
+reset patch_mediator[3];
+h patch_mediator[3];
+reset patch_mediator[4];
+h patch_mediator[4];
+reset patch_mediator[5];
+h patch_mediator[5];
+barrier patch_control, patch_target, patch_mediator;
+cx patch_control[2], patch_mediator[0];
+cx patch_mediator[0], patch_target[0];
+cx patch_control[5], patch_mediator[1];
+cx patch_mediator[1], patch_target[3];
+cx patch_control[8], patch_mediator[2];
+cx patch_mediator[2], patch_target[6];
+barrier patch_control, patch_target, patch_mediator;
+boundary_syn[0] = measure patch_mediator[0];
+boundary_syn[1] = measure patch_mediator[1];
+boundary_syn[2] = measure patch_mediator[2];
+boundary_syn[3] = measure patch_mediator[3];
+boundary_syn[4] = measure patch_mediator[4];
+boundary_syn[5] = measure patch_mediator[5];
+barrier patch_control, patch_target;
+
+// Lattice Surgery Interaction Cycle 5
+reset patch_mediator[0];
+h patch_mediator[0];
+reset patch_mediator[1];
+h patch_mediator[1];
+reset patch_mediator[2];
+h patch_mediator[2];
+reset patch_mediator[3];
+h patch_mediator[3];
+reset patch_mediator[4];
+h patch_mediator[4];
+reset patch_mediator[5];
+h patch_mediator[5];
+barrier patch_control, patch_target, patch_mediator;
+cx patch_control[2], patch_mediator[0];
+cx patch_mediator[0], patch_target[0];
+cx patch_control[5], patch_mediator[1];
+cx patch_mediator[1], patch_target[3];
+cx patch_control[8], patch_mediator[2];
+cx patch_mediator[2], patch_target[6];
+barrier patch_control, patch_target, patch_mediator;
+boundary_syn[0] = measure patch_mediator[0];
+boundary_syn[1] = measure patch_mediator[1];
+boundary_syn[2] = measure patch_mediator[2];
+boundary_syn[3] = measure patch_mediator[3];
+boundary_syn[4] = measure patch_mediator[4];
+boundary_syn[5] = measure patch_mediator[5];
+barrier patch_control, patch_target;
