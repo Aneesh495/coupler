@@ -111,6 +111,16 @@ impl Parser {
                     other => Err(format!("Expected string for defcalgrammar, found {:?}", other)),
                 }
             }
+            Token::Cal => {
+                self.advance();
+                self.expect(Token::LBrace)?;
+                let mut text = String::new();
+                while !self.check(&Token::RBrace) && !self.check(&Token::Eof) {
+                    text.push_str(&format!("{:?} ", self.advance()));
+                }
+                self.expect(Token::RBrace)?;
+                Ok(Statement::Pragma { text: format!("cal {{ {} }}", text.trim()) })
+            }
             Token::Defcal => self.parse_defcal(),
             Token::Measure => self.parse_measure_statement(),
             Token::Reset => {
@@ -236,6 +246,7 @@ impl Parser {
         }
         let name = match self.advance() {
             Token::Ident(id) => id,
+            Token::HardwareQubit(idx) => format!("${}", idx),
             other => return Err(format!("Expected qubit register name, found {:?}", other)),
         };
         if is_qreg && self.check(&Token::LBracket) {
@@ -592,17 +603,18 @@ impl Parser {
         let mut params = Vec::new();
         if self.check(&Token::LParen) {
             self.advance();
-            while !self.check(&Token::RParen) && !self.check(&Token::Eof) {
-                // Parameter with optional type e.g. `angle[32] amp` or `amp`
-                let mut p = String::new();
-                while !self.check(&Token::Comma) && !self.check(&Token::RParen) && !self.check(&Token::Eof) {
-                    p.push_str(&format!("{:?} ", self.advance()));
-                }
-                params.push(p.trim().into());
-                if self.check(&Token::Comma) {
-                    self.advance();
-                } else {
-                    break;
+            if !self.check(&Token::RParen) {
+                while !self.check(&Token::RParen) && !self.check(&Token::Eof) {
+                    let mut p = String::new();
+                    while !self.check(&Token::Comma) && !self.check(&Token::RParen) && !self.check(&Token::Eof) {
+                        p.push_str(&format!("{:?} ", self.advance()));
+                    }
+                    params.push(p.trim().into());
+                    if self.check(&Token::Comma) {
+                        self.advance();
+                    } else {
+                        break;
+                    }
                 }
             }
             self.expect(Token::RParen)?;
@@ -621,41 +633,17 @@ impl Parser {
         self.expect(Token::LBrace)?;
         let mut body = Vec::new();
         while !self.check(&Token::RBrace) && !self.check(&Token::Eof) {
-            // Pulse calibrations: e.g. `play(channel, waveform(...));`
-            let cal_ident = match self.advance() {
-                Token::Ident(id) => id,
-                other => return Err(format!("Expected calibration directive, found {:?}", other)),
-            };
-            self.expect(Token::LParen)?;
-            let mut args = Vec::new();
-            while !self.check(&Token::RParen) && !self.check(&Token::Eof) {
-                match self.advance() {
-                    Token::Ident(a) => args.push(Expression::Identifier(a)),
-                    Token::DurationLit(val, unit_str) => {
-                        let unit = match unit_str.as_str() {
-                            "dt" => DurationUnit::Dt,
-                            "ns" => DurationUnit::Ns,
-                            "us" => DurationUnit::Us,
-                            "ms" => DurationUnit::Ms,
-                            _ => DurationUnit::S,
-                        };
-                        args.push(Expression::Duration(val, unit));
-                    }
-                    _ => {}
-                }
-                if self.check(&Token::Comma) {
-                    self.advance();
-                } else {
-                    break;
-                }
+            let mut stmt_text = String::new();
+            while !self.check(&Token::Semicolon) && !self.check(&Token::RBrace) && !self.check(&Token::Eof) {
+                stmt_text.push_str(&format!("{:?} ", self.advance()));
             }
-            self.expect(Token::RParen)?;
-            self.expect(Token::Semicolon)?;
-
+            if self.check(&Token::Semicolon) {
+                self.advance();
+            }
             body.push(CalStatement::Play {
                 channel: "tx".into(),
-                waveform: cal_ident,
-                args,
+                waveform: stmt_text.trim().into(),
+                args: Vec::new(),
             });
         }
         self.expect(Token::RBrace)?;
