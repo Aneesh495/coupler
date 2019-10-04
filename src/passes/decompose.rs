@@ -109,6 +109,7 @@ pub fn decompose_gate(gc: &GateCall) -> Vec<GateCall> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::types::QubitRef;
 
     #[test]
     fn test_hadamard_decomposition() {

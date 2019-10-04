@@ -64,6 +64,7 @@ pub fn compute_asap_schedule(prog: &Program) -> ScheduleReport {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::GateCall;
     use crate::types::QubitRef;
 
     #[test]
